@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <limits.h>
+#define N 4 
+int costMatrix[N][N];
+bool assigned[N];  
+int currentAssignment[N];  
+int minCost = INT_MAX;  
+void branchAndBound(int worker, int totalCost) {
+    if (worker == N) {
+    if (totalCost < minCost) {
+    minCost = totalCost;
+    for (int i = 0; i < N; i++) {
+    currentAssignment[i] = assigned[i];
+    }
+    }
+    return;
+    }
+    for (int task = 0; task < N; task++) {
+    if (!assigned[task]) {
+    assigned[task] = true;
+    branchAndBound(worker + 1, totalCost + costMatrix[worker][task]);
+    assigned[task] = false;
+    }
+    }
+}
+int main() {
+    printf("Enter the cost matrix:\n");
+    for (int i = 0; i < N; i++) {
+    for (int j = 0; j < N; j++) {
+    scanf("%d", &costMatrix[i][j]);
+    }
+    }
+    for (int i = 0; i < N; i++) {
+    assigned[i] = false;
+    currentAssignment[i] = -1;
+    }
+    branchAndBound(0, 0);
+    printf("Minimum Cost: %d\n", minCost);
+    printf("Assignments:\n");
+    for (int i = 0; i < N; i++) {
+    printf("Worker %d -> Task %d\n", i, currentAssignment[i]);
+    }
+    return 0;
+}
