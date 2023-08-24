@@ -1,0 +1,51 @@
+ #include <stdio.h>
+#include <stdlib.h>
+#define MAX_CONTAINERS 100
+#define MAX_ITEMS 100
+struct Item {
+    int id;
+    int weight;
+};
+struct Container {
+    int id;
+    int capacity;
+    int remainingCapacity;
+};
+int compareItems(const void *a, const void *b) {
+    return ((struct Item *)b)->weight - ((struct Item *)a)->weight;
+}
+void packItems(struct Item items[], int numItems, struct Container containers[], int numContainers) {
+    for (int i = 0; i < numItems; i++) {
+    for (int j = 0; j < numContainers; j++) {
+    if (items[i].weight <= containers[j].remainingCapacity) {
+    printf("Item %d (Weight: %d) packed into Container %d\n",
+    items[i].id, items[i].weight, containers[j].id);
+    containers[j].remainingCapacity -= items[i].weight;
+    break;
+    }
+    }
+    }
+}
+int main() {
+    int numItems, numContainers;
+    printf("Enter the number of items: ");
+    scanf("%d", &numItems);
+    struct Item items[MAX_ITEMS];
+    for (int i = 0; i < numItems; i++) {
+    printf("Enter weight of Item %d: ", i + 1);
+    scanf("%d", &items[i].weight);
+    items[i].id = i + 1;
+    }
+    printf("Enter the number of containers: ");
+    scanf("%d", &numContainers);
+    struct Container containers[MAX_CONTAINERS];
+    for (int i = 0; i < numContainers; i++) {
+    printf("Enter capacity of Container %d: ", i + 1);
+    scanf("%d", &containers[i].capacity);
+    containers[i].id = i + 1;
+    containers[i].remainingCapacity = containers[i].capacity;
+    }
+    qsort(items, numItems, sizeof(struct Item), compareItems);
+    packItems(items, numItems, containers, numContainers);
+    return 0;
+}
