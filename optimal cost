@@ -1,0 +1,39 @@
+ #include <stdio.h>
+#include <limits.h>
+#define ROWS 3
+#define COLS 3
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+int findMinPathSum(int grid[ROWS][COLS]) {
+    int dp[ROWS][COLS];
+    for (int i = 0; i < ROWS; ++i) {
+    for (int j = 0; j < COLS; ++j) {
+    dp[i][j] = INT_MAX;
+    }
+    }
+    dp[0][0] = grid[0][0];
+    for (int i = 0; i < ROWS; ++i) {
+    for (int j = 0; j < COLS; ++j) {
+    if (i > 0) {
+    dp[i][j] = min(dp[i][j], dp[i - 1][j] + grid[i][j]);
+    }
+    if (j > 0) {
+    dp[i][j] = min(dp[i][j], dp[i][j - 1] + grid[i][j]);
+    }
+    }
+    }
+    return dp[ROWS - 1][COLS - 1];
+}
+int main() {
+    int grid[ROWS][COLS];
+    printf("Enter the grid values:\n");
+    for (int i = 0; i < ROWS; ++i) {
+    for (int j = 0; j < COLS; ++j) {
+    scanf("%d", &grid[i][j]);
+    }
+    }
+    int optimalCost = findMinPathSum(grid);
+    printf("Optimal cost: %d\n", optimalCost);
+    return 0;
+}
